@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive IT Terms Glossary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --background: #e0e5ec;
+            --text-primary: #2d3436;
+            --text-secondary: #636e72;
+            --accent: #4a90e2;
+            --shadow-light: #ffffff;
+            --shadow-dark: #bec3c9;
+        }
+
+        body {
+            background: var(--background);
+            min-height: 100vh;
+            padding: 2rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            border-radius: 20px;
+            background: var(--background);
+            box-shadow: 20px 20px 60px var(--shadow-dark),
+                       -20px -20px 60px var(--shadow-light);
+        }
+
+        .search-box {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border-radius: 15px;
+            background: var(--background);
+            box-shadow: inset 5px 5px 10px var(--shadow-dark),
+                       inset -5px -5px 10px var(--shadow-light);
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            background: transparent;
+            font-size: 1rem;
+            outline: none;
+            color: var(--text-primary);
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border-radius: 15px;
+            background: var(--background);
+            box-shadow: 8px 8px 16px var(--shadow-dark),
+                       -8px -8px 16px var(--shadow-light);
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 50px;
+            background: var(--background);
+            box-shadow: 5px 5px 10px var(--shadow-dark),
+                       -5px -5px 10px var(--shadow-light);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-primary);
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            color: white;
+            box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .terms-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .term-card {
+            padding: 1.5rem;
+            border-radius: 15px;
+            background: var(--background);
+            box-shadow: 8px 8px 16px var(--shadow-dark),
+                       -8px -8px 16px var(--shadow-light);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .term-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .term {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .definition {
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .category-tag {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            background: var(--background);
+            box-shadow: 3px 3px 6px var(--shadow-dark),
+                       -3px -3px 6px var(--shadow-light);
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 50%;
+            background: var(--background);
+            box-shadow: 3px 3px 6px var(--shadow-dark),
+                       -3px -3px 6px var(--shadow-light);
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .term-card:hover .copy-btn {
+            opacity: 1;
+        }
+
+        .copy-btn:active {
+            box-shadow: inset 3px 3px 6px var(--shadow-dark),
+                       inset -3px -3px 6px var(--shadow-light);
+        }
+
+        .tooltip {
+            position: absolute;
+            background: var(--text-primary);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            top: -2rem;
+            right: 0;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .no-results {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .terms-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>IT Terms Glossary</h1>
+            <p style="margin-top: 1rem; color: var(--text-secondary);">A comprehensive collection of IT industry terminology</p>
+        </header>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search terms, definitions, or categories...">
+        </div>
+
+        <div class="filters" id="categoryFilters">
+            <!-- Filters will be dynamically populated -->
+        </div>
+
+        <ul class="terms-list" id="termsList">
+            <!-- Terms will be dynamically populated -->
+        </ul>
+    </div>
+
+    <script>
+        // Sample data - can be expanded
+        const terms = [
+            {
+                term: 'MVP',
+                definition: 'Minimum Viable Product - The most basic version of a product that can be released to market',
+                category: 'Project Management'
+            },
+            {
+                term: 'POC',
+                definition: 'Proof of Concept - A demonstration to verify that certain concepts or theories have the potential for real-world application',
+                category: 'Development'
+            },
+            {
+                term: 'QA',
+                definition: 'Quality Assurance - The maintenance of a desired level of quality in a service or product through systematic monitoring and testing',
+                category: 'Testing'
+            },
+            {
+                term: 'R&D',
+                definition: 'Research and Development - Activities companies undertake to innovate and introduce new products and services',
+                category: 'Business'
+            },
+            {
+                term: 'SCRUM',
+                definition: 'An agile framework for developing, delivering, and sustaining complex products through iterative and incremental development',
+                category: 'Methodology'
+            },
+            {
+                term: 'SOW',
+                definition: 'Statement of Work - A document that defines project-specific activities, deliverables, and timelines',
+                category: 'Business'
+            },
+            {
+                term: 'ETA',
+                definition: 'Estimated Time of Arrival - Projected completion or delivery time for a task or project phase',
+                category: 'Project Management'
+            }
+        ];
+
+        // Get DOM elements
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilters = document.getElementById('categoryFilters');
+        const termsList = document.getElementById('termsList');
+
+        // Get unique categories
+        const categories = [...new Set(terms.map(term => term.category))];
+
+        // Create category filters
+        const allFilter = document.createElement('button');
+        allFilter.textContent = 'All';
+        allFilter.classList.add('filter-btn', 'active');
+        categoryFilters.appendChild(allFilter);
+
+        categories.forEach(category => {
+            const btn = document.createElement('button');
+            btn.textContent = category;
+            btn.classList.add('filter-btn');
+            categoryFilters.appendChild(btn);
+        });
+
+        // Active filter tracking
+        let activeFilter = 'All';
+        let searchQuery = '';
+
+        // Filter button click handlers
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeFilter = btn.textContent;
+                renderTerms();
+            });
+        });
+
+        // Search input handler
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase();
+            renderTerms();
+        });
+
+        // Render terms function
+        function renderTerms() {
+            termsList.innerHTML = '';
+
+            const filteredTerms = terms.filter(term => {
+                const matchesFilter = activeFilter === 'All' || term.category === activeFilter;
+                const matchesSearch = term.term.toLowerCase().includes(searchQuery) ||
+                                    term.definition.toLowerCase().includes(searchQuery) ||
+                                    term.category.toLowerCase().includes(searchQuery);
+                return matchesFilter && matchesSearch;
+            });
+
+            if (filteredTerms.length === 0) {
+                termsList.innerHTML = '<li class="no-results">No terms found matching your criteria</li>';
+                return;
+            }
+
+            filteredTerms.forEach(term => {
+                const li = document.createElement('li');
+                li.className = 'term-card';
+                li.innerHTML = `
+                    <div class="term">${term.term}</div>
+                    <div class="definition">${term.definition}</div>
+                    <span class="category-tag">${term.category}</span>
+                    <button class="copy-btn" title="Copy to clipboard">📋</button>
+                    <span class="tooltip">Copied!</span>
+                `;
+
+                const copyBtn = li.querySelector('.copy-btn');
+                const tooltip = li.querySelector('.tooltip');
+
+                copyBtn.addEventListener('click', () => {
+                    const textToCopy = `${term.term}: ${term.definition}`;
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        tooltip.style.opacity = '1';
+                        setTimeout(() => {
+                            tooltip.style.opacity = '0';
+                        }, 1500);
+                    });
+                });
+
+                termsList.appendChild(li);
+            });
+        }
+
+        // Initial render
+        renderTerms();
+    </script>
+</body>
+</html>

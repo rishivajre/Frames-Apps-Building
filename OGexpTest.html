@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experience Test Reports</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --background: #f0f0f0;
+            --text-primary: #333;
+            --text-secondary: #555;
+            --shadow-light: #ffffff;
+            --shadow-dark: #d9d9d9;
+            --spacing-unit: clamp(1rem, 2vw, 2rem);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--background);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            padding: var(--spacing-unit);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: min(1200px, 90vw);
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .report-card {
+            background-color: var(--background);
+            border-radius: clamp(10px, 2vw, 20px);
+            box-shadow: 10px 10px 20px var(--shadow-dark),
+                       -10px -10px 20px var(--shadow-light);
+            padding: var(--spacing-unit);
+            margin-bottom: var(--spacing-unit);
+            transition: transform 0.3s ease;
+        }
+
+        @media (hover: hover) {
+            .report-card:hover {
+                transform: translateY(-5px);
+            }
+        }
+
+        .report-header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-unit);
+        }
+
+        .report-status {
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            box-shadow: inset 3px 3px 6px var(--shadow-dark),
+                       inset -3px -3px 6px var(--shadow-light);
+        }
+
+        .status-new { color: #2ecc71; }
+        .status-updated { color: #3498db; }
+
+        .report-card h2 {
+            color: var(--text-primary);
+            font-size: clamp(1.25rem, 3vw, 1.5rem);
+            margin: 0;
+        }
+
+        .report-card p {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-unit);
+            font-size: clamp(0.875rem, 2vw, 1rem);
+        }
+
+        .report-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: var(--spacing-unit);
+            color: var(--text-secondary);
+            font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .btn {
+            background-color: var(--background);
+            border: none;
+            border-radius: 15px;
+            box-shadow: 5px 5px 10px var(--shadow-dark),
+                       -5px -5px 10px var(--shadow-light);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: clamp(0.875rem, 2vw, 1rem);
+            padding: 0.8rem 1.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        @media (hover: hover) {
+            .btn:hover {
+                box-shadow: 2px 2px 5px var(--shadow-dark),
+                           -2px -2px 5px var(--shadow-light);
+                transform: translateY(-2px);
+            }
+        }
+
+        .btn:active {
+            box-shadow: inset 2px 2px 5px var(--shadow-dark),
+                       inset -2px -2px 5px var(--shadow-light);
+            transform: translateY(0);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background-color: var(--background);
+            padding: var(--spacing-unit);
+            border-radius: 20px;
+            box-shadow: 10px 10px 20px var(--shadow-dark),
+                       -10px -10px 20px var(--shadow-light);
+            width: min(500px, 100%);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            z-index: 1;
+        }
+
+        .analytics-container {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 15px;
+            box-shadow: inset 3px 3px 6px var(--shadow-dark),
+                       inset -3px -3px 6px var(--shadow-light);
+            height: min(300px, 50vh);
+            width: 100%;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: var(--background);
+            border-radius: 5px;
+            box-shadow: inset 3px 3px 6px var(--shadow-dark),
+                       inset -3px -3px 6px var(--shadow-light);
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(45deg, #3498db, #2ecc71);
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: var(--spacing-unit);
+            right: var(--spacing-unit);
+            background-color: var(--background);
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            box-shadow: 5px 5px 10px var(--shadow-dark),
+                       -5px -5px 10px var(--shadow-light);
+            display: none;
+            animation: slideIn 0.3s ease;
+            z-index: 2000;
+            max-width: min(400px, 90vw);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @media (max-width: 480px) {
+            .report-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .actions {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .report-meta {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="report-card">
+            <div class="report-header">
+                <h2>Experience Test Report 1</h2>
+                <span class="report-status status-new">New</span>
+            </div>
+            <div class="report-meta">
+                <div class="meta-item">
+                    <i class="far fa-calendar"></i>
+                    <span>Created: Nov 15, 2024</span>
+                </div>
+                <div class="meta-item">
+                    <i class="far fa-user"></i>
+                    <span>Author: John Doe</span>
+                </div>
+                <div class="meta-item">
+                    <i class="far fa-eye"></i>
+                    <span>Views: 245</span>
+                </div>
+            </div>
+            <p>This is a detailed report on the user experience testing conducted for our latest product release. The report includes key findings, user feedback, and recommendations for improvement.</p>
+            <div class="actions">
+                <button class="btn download-btn">
+                <a href="https://testtales.com/wp-content/uploads/2024/11/AICamp_Exp_Report.pdf" download="AICamp_Exp_Report"><i class="fas fa-download"></i> Download Report</a>
+                    
+                </button>
+                <button class="btn analytics-btn">
+                    <i class="fas fa-chart-bar"></i> View Analytics
+                </button>
+                <button class="btn share-btn">
+                    <i class="fas fa-share-alt"></i> Share
+                </button>
+            </div>
+        </div>
+
+        <div class="report-card">
+            <div class="report-header">
+                <h2>Experience Test Report 2</h2>
+                <span class="report-status status-updated">Updated</span>
+            </div>
+            <div class="report-meta">
+                <div class="meta-item">
+                    <i class="far fa-calendar"></i>
+                    <span>Updated: Nov 14, 2024</span>
+                </div>
+                <div class="meta-item">
+                    <i class="far fa-user"></i>
+                    <span>Author: Jane Smith</span>
+                </div>
+                <div class="meta-item">
+                    <i class="far fa-eye"></i>
+                    <span>Views: 189</span>
+                </div>
+            </div>
+            <p>This report covers the user experience testing for our mobile app update. It provides insights into user behavior, pain points, and suggestions for enhancing the overall user experience.</p>
+            <div class="actions">
+                <button class="btn download-btn">
+                    <i class="fas fa-download"></i> Download Report
+                </button>
+                <button class="btn analytics-btn">
+                    <i class="fas fa-chart-bar"></i> View Analytics
+                </button>
+                <button class="btn share-btn">
+                    <i class="fas fa-share-alt"></i> Share
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Download Modal -->
+    <div class="modal" id="downloadModal">
+        <div class="modal-content">
+            <i class="fas fa-times modal-close"></i>
+            <h3>Downloading Report</h3>
+            <p>Please wait while we prepare your download...</p>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Modal -->
+    <div class="modal" id="analyticsModal">
+        <div class="modal-content">
+            <i class="fas fa-times modal-close"></i>
+            <h3>Report Analytics</h3>
+            <div class="analytics-container" id="analyticsChart"></div>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div class="modal" id="shareModal">
+        <div class="modal-content">
+            <i class="fas fa-times modal-close"></i>
+            <h3>Share Report</h3>
+            <p>Share this report via:</p>
+            <div class="actions">
+                <button class="btn">
+                    <i class="fab fa-twitter"></i> Twitter
+                </button>
+                <button class="btn">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </button>
+                <button class="btn">
+                    <i class="far fa-envelope"></i> Email
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script>
+        // Utility functions
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function showToast(message, duration = 3000) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, duration);
+        }
+
+        // Download functionality
+        document.querySelectorAll('.download-btn').forEach(button => {
+            button.addEventListener('click', async () => {
+                showModal('downloadModal');
+                const progress = document.querySelector('.progress');
+                
+                // Simulate download progress
+                let width = 0;
+                const interval = setInterval(() => {
+                    if (width >= 100) {
+                        clearInterval(interval);
+                        hideModal('downloadModal');
+                        showToast('Download completed successfully!');
+                        // Trigger actual download
+                        const link = document.createElement('a');
+                        link.href = '/api/placeholder/400/320'; // Replace with actual report URL
+                        link.download = 'experience-report.pdf';
+                        link.click();
+                    } else {
+                        width += 2;
+                        progress.style.width = width + '%';
+                    }
+                }, 50);
+            });
+        });
+
+        // Analytics functionality
+        document.querySelectorAll('.analytics-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                showModal('analyticsModal');
+                
+                // Sample analytics data
+                const ctx = document.getElementById('analyticsChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'Report Views',
+                            data: [65, 59, 80, 81, 56, 55],
+                            borderColor: '#3498db',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            });
+        });
+
+        // Share functionality
+        document.querySelectorAll('.share-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                showModal('shareModal');
+            });
+        });
+
+        // Close modals
+        document.querySelectorAll('.modal-close').forEach(closeBtn => {
+            closeBtn.addEventListener('click', () => {
+                const modal = closeBtn.closest('.modal');
+                hideModal(modal.id);
+            });
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                hideModal(e.target.id);
+            }
+        });
+
+        // Social sharing functionality
+        document.querySelectorAll('#shareModal .btn').forEach(shareBtn => {
+            shareBtn.addEventListener('click', () => {
+                const platform = shareBtn.textContent.trim();
+                showToast(`Sharing via ${platform}...`);
+                hideModal('shareModal');
+                
+                // Implement actual sharing functionality here
+                const shareUrl = window.location.href;
+                const shareText = 'Check out this experience test report!';
+                
+                switch(platform) {
+                    case 'Twitter':
+                        window.open(`https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}`);
+                        break;
+                    case 'LinkedIn':
+                        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`);
+                        break;
+                    case 'Email':
+                        window.location.href = `mailto:?subject=Experience Test Report&body=${shareText} ${shareUrl}`;
+                        break;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neumorphic Portfolio</title>
+    <style>
+        :root {
+            --background: #dbfbef;
+            --text-color: #2d4263;
+            --shadow-light: #ffffff;
+            --shadow-dark: #a3b1c6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--background);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            border-radius: 20px;
+            background: var(--background);
+            box-shadow: 
+                8px 8px 15px var(--shadow-dark),
+                -8px -8px 15px var(--shadow-light);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .project-card {
+            background: var(--background);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+            box-shadow: 
+                8px 8px 15px var(--shadow-dark),
+                -8px -8px 15px var(--shadow-light);
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-card img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .project-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-card p {
+            margin-bottom: 1rem;
+            color: #666;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            background: var(--background);
+            font-size: 0.8rem;
+            box-shadow: 
+                3px 3px 6px var(--shadow-dark),
+                -3px -3px 6px var(--shadow-light);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            background: var(--background);
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 
+                5px 5px 10px var(--shadow-dark),
+                -5px -5px 10px var(--shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            box-shadow: 
+                inset 4px 4px 8px var(--shadow-dark),
+                inset -4px -4px 8px var(--shadow-light);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .project-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>My Portfolio</h1>
+            <p>....</p>
+        </header>
+
+        <main class="projects-grid">
+            <!-- Project 1 -->
+            <article class="project-card">
+                <img src="https://testtales.com/wp-content/uploads/2024/11/SPANDAK-2-1-scaled.jpg" alt="Project 1" loading="lazy">
+                <h3>Spandak</h3>
+                <p>A prototype Seismograph fully IoT based to get your data from the fiel on to your smartphone instantly. No need to go back to your lab for analysis.</p>
+                <div class="tags">
+                    <span class="tag">React</span>
+                    <span class="tag">Node.js</span>
+                    <span class="tag">MongoDB</span>
+                </div>
+                <a href="#" class="btn">View Project</a>
+            </article>
+
+            <!-- Project 2 -->
+            <article class="project-card">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHVviquGUWRYY4NiUgZWSHOsDEinSubn5s_A&s" alt="Project 2">
+                <h3>Task Management App</h3>
+                <p>A collaborative task management tool with real-time updates and team features.</p>
+                <div class="tags">
+                    <span class="tag">Vue.js</span>
+                    <span class="tag">Firebase</span>
+                    <span class="tag">Tailwind</span>
+                </div>
+                <a href="#" class="btn">View Project</a>
+            </article>
+
+            <!-- Project 3 -->
+            <article class="project-card">
+                <img src="/api/placeholder/400/320" alt="Project 3">
+                <h3>Weather Dashboard</h3>
+                <p>Real-time weather tracking with interactive maps and detailed forecasts.</p>
+                <div class="tags">
+                    <span class="tag">JavaScript</span>
+                    <span class="tag">Weather API</span>
+                    <span class="tag">Chart.js</span>
+                </div>
+                <a href="#" class="btn">View Project</a>
+            </article>
+        </main>
+    </div>
+</body>
+</html>
